@@ -201,5 +201,45 @@
   string formatted = leftRight.ToString(); // "Left, Right"
   ```
   * Generics  
+    * unbound generic types
+    ```
+    class A<T> {}
+    class A<T1, T2> {}
     
+    Type a1 = typeof(A<>);
+    Type a2 = typeof(A<,>);
+    ```
+    * generic constraints
+    ```
+    where T: base-class  // must subclass a perticular class 
+    where T: interface   // must implement that interface
+    where T: class       // 
+    where T: struct
+    where T: new()
+    where U: T
+    ```
+    * self referenceing generic declarations
+    * type parameters and conversions
+    ```
+    // Numberic conversion
+    // Reference conversion
+    // Boxing/unboxing conversion
+    // Custom conversion
     
+    StringBuilder Foo<T> (T arg)
+    {
+      if (arg is StringBuilder)
+        return (StringBuilder)arg;    // will not compile
+    }
+    
+    StringBuilder Foo<T> (T arg)
+    {
+      StringBuilder sb = arg as StringBuilder;
+      if (null != sb) return sb;
+    }
+    ```
+    * Covariance: assume A is convertible to B, X has a covariant type parameter if X\<A\> is convertible to X\<B\>, **covariance is not automatic**
+    ```
+    public interface IPoppable<out T> {T Pop();}
+    ```
+  * C\# Generics Versus C\+\+ Template:in C\#, producer type can be compiled into a library, because the synthesis between the producer and the costumer that produces closed types doesn't actually happen until runtime; in C\+\+, it performed at compile time

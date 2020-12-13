@@ -241,5 +241,19 @@
     * Covariance: assume A is convertible to B, X has a covariant type parameter if X\<A\> is convertible to X\<B\>, **covariance is not automatic**
     ```
     public interface IPoppable<out T> {T Pop();}
+    
+    var bears = new Stack<Bear>();
+    bears.push(new Bear());
+    // Bears implements IPoppable<Bear>, we can convert to IPoppable<Animal>
+    IPoppable<Animal> animals = bears;
+    Animal a = animals.pop();
+    ```
+    * Contravariance:reverse convert compare to Convariance
+    ```
+    public interface IPushable<in T> {void push(T obj);}
+    
+    IPushable<Animal> animals = new Stack<Animals>();
+    IPushable<Bear> bears = animals;
+    bears.push(new Bear());
     ```
   * C\# Generics Versus C\+\+ Template:in C\#, producer type can be compiled into a library, because the synthesis between the producer and the costumer that produces closed types doesn't actually happen until runtime; in C\+\+, it performed at compile time

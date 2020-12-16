@@ -88,7 +88,40 @@
     public virtual event Eventhandler<EventArgs> VirtualEvent;
   }
   ```
+  * Lambda
+    * captured variables have their lifetimes extended to that of the delegate.
+    ```
+    static Func<int> Natural()
+    {
+      int seed = 0;
+      return () => seed++;
+    }
+    static void Main()
+    {
+      Func<int> natural = Natural();
+      Console.WriteLine(natural);  // 0
+      Console.WriteLine(natural);  // 1
+    }
+    ```
+    * when you capture the iteration variables of a for loop
+    ```
+    Action[] actions = new Action[3];
+    for (int i = 0; i < 3; ++i)
+    {
+      actions[i] = () => Console.WriteLine(i);
+    }
+    foreach (Action a in actions) a();   // 333
+    ```
+    * in C# 5.0, foreach loops would in the same way above. This cause considerable confusion and its been fixed since C# 5.0.
+    * lambda expression versus local method: local method can be recursive, can avoid the clutter of specifying a delegate type, and they incur lightly less overhead; lambda use when call higher-order functions
+  * Anonymous methods: an anonymous method is like a lambda expression, but it lacks the following feature: implicitly typed parameters, expression syntax, the ability to compile to an expression tree.
+  ```
+  delegate int transformer (int i);  
+  transformer sqr = delegate (int x) { return x * x; };
   
+  public event EventHandler Clicked = delegate {};
+  Clicked += delegate { Console.WriteLine("clicked"); };
+  ```
 
 
 

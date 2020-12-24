@@ -122,7 +122,165 @@
   public event EventHandler Clicked = delegate {};
   Clicked += delegate { Console.WriteLine("clicked"); };
   ```
-
+  * when exception is thrown, the CLR performs a test: is execution currently within a try statement that can catch the exception:
+    * if so, execution is passed to the compatible catch block, and if present, executing the finally block first
+    * if not, execution jumps back the caller of the function, and the test is repeat
+    * if no function takes the responsibility for the exception, an error dialog box is displayed to the user, and the program terminates
+  * exception filter
+  ```
+  catch (WebException ex) when (ex.Status == WebExceptionStatus.Timeout)
+  { ... }
+  catch (WebException ex) when (ex.Status == WebExceptionStatus.SendFallure)
+  ```
+  * IEnumerator and IEnumerable are define in System.Collections. IEnumerator\<T\> and IEnumerable\<T\> are defined in System.Collection.Generic
+  ```
+  class IEnumerator
+  {
+    public IteratorVariableType Current { get {...}}
+    public bool MoveNext() {...}
+  }
+  class IEnumerable
+  {
+    public Enumerator GetEnumerator() {...}
+  }
+  ```
+  * Dictionary initialize
+  ```
+  var dict = new Dictionary<int, string>()
+  {
+    {5, "five"},
+    {10, "ten"}
+  }
+  var dict = new Dictionary<int, string>()
+  {
+    [3] = "three",
+    [10] = "ten"
+  }
+  ```
+  * On each yield statement, control is returned to the caller, but the caller's state is maintained so that the method can continue executing as soon as the caller enumerates the next element. The compiler converts iterator methods into private classes that implement IEnumeable\<T\> and/or IEnumerator\<T\>.
+  ```
+  static IEnumerable<int> Fibs(int fibCount)
+  {
+    for (int i = 0, prevFib = 1, curFib = 1; i < fibCount; ++i)
+    {
+      yield return prevFib;
+      int newFib = prevFib + curFib;
+      preFib = curFib;
+      curFib = newFib;
+    }
+  }
+  static IEnumerable<string> Foo()
+  {
+    yield return "One";
+    yield return "Two";
+    
+    if (breakEarly)
+      yield break;
+    
+    yield return "Three";
+  }
+  ```
+  * A yield return statement cannot appear in a try block that has a catch cluase. You can, however, yield within a try block that has a finally block. the code in the finally block executes when the consuming enumerator reaches the end of the sequence or is disposed.
+  ```
+  IEnumerable<string> Foo()
+  {
+    try { yield return "One";}  // Illegal
+    catch { ... }
+  }
+  
+  IEnumerable<string> Foo()
+  {
+    try { yield return "One";}  // OK
+    finally { ... }
+  }
+  ```
+  * Nullable Types/Nullable\<T\> Struct, 
+  ```
+  int? i = null;
+  
+  // code translate
+  public struct Nullable<T> where T: struct
+  {
+    public T value {get;}
+    public bool HasValue {get;}
+    public T GetValueOrDefault();
+    public T GetValueOrDefault(T defaultValue);
+    ...
+  }
+  
+  // operator lifting
+  int? x= 5;
+  int? y = 10;
+  boolb = x < y;  // bool b = (x.HasValue && y.HasValue) ? (x.Value < y.Value) : false;
+  
+  null == null  // true
+  
+  // bool? with & and | operator
+  bool? as an unknow value, so null | true is true
+  
+  // null operators
+  int? x = null;
+  int y = x ?? 5;  // y is 5
+  ```
+  * Extension methods: allow an existing type to be extended with new methods wihtout alerting the defination of the original type. an extension method is a static method of a static class, where the this modifier is applied to the first parameter. the type of the first parameter will be the type that is extended.
+  ```
+  public static class StringHelper
+  {
+   public static bool IsCapitalized(this string s)
+   {
+     if (string.IsNullOrEmpty(s))
+     {
+       return false;
+     }
+     else
+     {
+       return char.IsUpper(s[0]);
+     }
+   }
+  }
+  
+  Console.WriteLine("Perth".IsCapitalized());  // Console.WriteLine(StringHelper.IsCapitalized("Perth"));
+  ```
+  * Anonymous Types: is a simple class created by the compiler on the fly to store a set of value. To create an anonymous type, use the new keyword followed by an object initializer, specifying the propertise and values the type will contain
+  ```
+  var dude = new {Name = "Bob", Age = 23};
+  
+  int Age = 23;
+  var dude = new {Name = "Bob", Age, Age.ToString().Length};
+  
+  var a1 = new {X = 2, Y = 4};
+  var a2 = new {X = 2, Y = 4};
+  Console.WriteLine(a1.GetType() == a2.GetType());  // true
+  
+  Console.WriteLine(a1 == a2);  // false
+  Console.WriteLine(a1.equals(a2));  // true
+  
+  // A method cannot return an anonymously typed object, because it is illegal to write a method whose return type is var
+  // instead you must use object or dynamic and then whoever calls Foo has to reply on dynamic binding, with loss of static type safety
+  var Foo() => new {Name = "Bob", Age = 30};  // Illegal
+  dynamic Foo() => new {Name = "Bob", Age = 30};  // No static type safety
+  ```
+  * Tuple: to safely return multiple values from a method without resorting to out parameters
+  ```
+  // create a tuple with unnamed elements, which refer to as Item1, Item2
+  var bob = ("Bob", 23);
+  
+  // Naming Tuple elements
+  var tuple = (Name: "Bob", Age: 23);
+  
+  // specifying tuple types
+  static (string Name, int age) GetPerson() => ("Bob", 23);
+  static void Main()
+  {
+    var person = GetPerson();
+    Console.WriteLine(person.Name);
+    Console.WriteLine(person.Age);
+  }
+  ```
+  
+  
+  
+  
 
 
 

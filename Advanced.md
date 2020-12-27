@@ -276,7 +276,21 @@
     Console.WriteLine(person.Name);
     Console.WriteLine(person.Age);
   }
+  
+  // type erasure
+  public struct ValueTuple<T1>
+  public struct ValueTuple<T1, T2>
+  public struct ValueTuple<T1, T2, T3>
+  
+  // factory method
+  ValueTuple<string, int> bob1 = ValueTuple.Create("Bob", 23);
+  (string, int) bob2 = ValueTuple.Create("Bob", 23);
+  
+  // destructing tuple
+  var bob = ("Bob", 23);
+  (string name, int age) = bob;
   ```
+  
   
   
   

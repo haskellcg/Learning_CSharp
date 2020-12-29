@@ -290,7 +290,45 @@
   var bob = ("Bob", 23);
   (string name, int age) = bob;
   ```
+  * System.Tuple classes: you will find another family of generic types in the System namespace called Tuple (rather than ValueTuple). These were introduced in .Net Framework 4.0, and are classes. Defining tuple as classes was in retrospect considered a mistake.
+  * Attributes: an extensible machanism for adding custom information to code element (assemblies, types, members, return values, parameters, and generic type). This extensibility is useful for services that integrate deeply into the type system, without requiring special keywords or constructs in the C# language
+  ```
+  [ObsoleteAttribute]
+  public class Foo {...}
+  public sealed class ObsoleteAttribute: Attribute {...}
   
+  //Named and Positional attribute parameters
+  //first is positional parameter, correspond to the parameters of the attribute type's public constructors
+  //second is name parameter, correspond to public fields or public properties on the attribute type
+  [XmlElement("Customer", Namespace="http://oreilly.com")]
+  public class CustomerEntity {...}
+  
+  //attribute targets: you can also attach attributes to an assembly, this requires that you explicitly specify the attribute's target
+  [asssembly:CLSComliant(true)]
+  
+  //Multiple attribute
+  [Seriazble, Obsolete, CLSCompliant(false)]
+  public class Bar {...}
+  [Seriazble] [Obsolete] [CLSCompliant(false)]
+  public class Bar {...}
+  [Seriazble]
+  [Obsolete]
+  [CLSCompliant(false)]
+  public class Bar {...}
+  ```
+  * Caller info attributes: you can tag optional parameters with one the three caller info attributes, which instruct the compiler to fedd information obtained from the caller's source code into the parameter's default value. **Useful for logging**
+  ```
+  [CallerMemeberName]  applies the caller's member name
+  [CallerFilePath]     applies the path to caller's source code file
+  [CallerLineNumber]   applies the line number in the caller's source code file
+  ```
+  * Dynamic Binding: the process of resolving types, memebers, and operators, from compile time to runtime: Dynamic binding is useful when at compile time you know that a certain function, member, or operation exists, but the compiler does not. **This commonly occurs when you are interoperating with dynamic languages (such as IronPython) and COM and in scenarios when you might otherwise use reflection**. A dynamic types tells the compiler to relax. We expect the runtime type of d to has a Quack method
+  ```
+  dynamic d = GetSomeObject();
+  d.Quack()
+  
+  // Custom binding: occurs when a dynamic object implements IDynamicMetaObject provider (IDMOP)  
+  ```
   
   
   

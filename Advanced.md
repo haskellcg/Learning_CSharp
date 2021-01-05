@@ -327,7 +327,93 @@
   dynamic d = GetSomeObject();
   d.Quack()
   
-  // Custom binding: occurs when a dynamic object implements IDynamicMetaObject provider (IDMOP)  
+  // Custom binding: occurs when a dynamic object implements IDynamicMetaObject provider (IDMOP) 
+  
+  // Runtime representation of dynamic
+  typeof(dynamic) == typeof(object)
+  typeof(List<dynamic>) == typeof(List<object>)
+  typeof(dynamic[]) == typeof(object[])
+  
+  //dynamic conversions
+  int i = 7;
+  dynamic d = i;
+  long j = d;     // No cast required (implicit conversions)
+  short j = d;    // throw RuntimeBinderException
+  
+  //var Versus dynamic
+  
+  //dynamic calls without dynamic receiver, you can call statically known functions with dynamic arguments, such calls are subject to dynamic overload resolution
+  //and can include:
+  //    static methods
+  //    instance constructors
+  //    instance methods on receivers with a statically known type
+  dynamic x = ....
+  x.Foo();
+  
+  //Uncallable functions:can't be called dynamically
+  //    extension methods
+  //    members of an interface, if you need to cast to that interface to do so
+  //    base members hidden by a subclass
+  //dynamic binding requires two pieces of information: the name of the function to call, and the object upon which to call the funtion. However,
+  //in each of the uncallable scenarios, an additional type is enevolved, which is knwon only at compile time
+  ```
+  * Operator overloading
+  ```
+  //indirecly overloaded
+  //the compound assignment operator (e.g., +=, /=) are implicitly override by overriding the noncompound operator (e.g., +, /)
+  //the conditional operators && and || are implicitly overriden by overriding the bitwise operators & and |
+  
+  //example
+  public struct Note
+  {
+      int value;
+      public Note(int senitonesFromA)
+      {
+          value = semitonesFromA;
+      }
+      public static Note operator+(Note x, int semitones)
+      {
+          return new Note(x.value + semitones);
+      }
+  }
+  Note B = new Note(2);
+  Note CSharp = B + 2;
+  CSharp += 2;
+  
+  //overriding equality and comparision operators
+  //pairing: (==, !=), (<, >), (<=, >=)
+  //Equals and GetHashCode:if you override (== and !=)
+  //IComparable and IComparble<T>: if you override (<, > and <=, >=)
+  
+  //custom implicit and explicit conversions
+  //write a constructor that has a parameter of the type to convert from
+  //write ToXXX and static FromXXX methods to convert between types
+  public static implicit operator double(Note x) =>
+      440 * Math.Pow(2, (double)x.value / 12);
+  public static explicit operator Note(double x) =>
+      new Note((int)(0.5 + 12 * (Math.Log(x / 440) / Math.Log(2))));
+  Note n = (Note)554.32;    //explicit conversion
+  double x = n;             //implicit conversion    
+  ```
+  * Unsafe code and pointers: C# support direct memory manipulation via pointers within blocks of code marked unsafe and compiled with the /unsafe compiler option
+  ```
+  //fixed statement:required to pin a managed object, such as the bitmap, during the execution of a program, many objects are allocated and deallocated from heap
+  //in order to avoid unnecessary waste of fragmentation of memory, the gabage collector moves objects around.
+  //pointing to an object is futile if its address cound change while referencing it, so the fixed statement tells the gabage collector to "pin" the object
+  unsafe void BlueFilter(int [,]bitmap)
+  {
+      int length = bitmap.Length;
+      fixed (int *b = bitmap)
+      {
+          int *p = b;
+          for (int i = 0; i < length; ++i)
+          {
+              *p++ &= 0xFF;
+          }
+      }
+  }
+  
+  //the pointer to member operator
   ```
   
   

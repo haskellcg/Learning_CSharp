@@ -414,7 +414,33 @@
   }
   
   //the pointer to member operator
+  
+  //stackalloc keyword: since it is allocated on the stack, its lifetime is limited to the execution of the method, just as other local variable
+  int *a = stackalloc int[10];
+  
+  //fixed-size buffers: create fixed-size buffers within structs
+  unsafe struct UnsafeUnicodeString
+  {
+      public short Length;
+      public fixed byte Buffer[30];
+  }
   ```
+  * Preprocessor directives
+  ```
+  #define
+  #undef
+  #if
+  #else
+  #elif
+  #endif
+  #warning
+  #error
+  #pragma warning
+  #line
+  #region
+  #endregion
+  ```
+  
   
   
   

@@ -55,9 +55,80 @@
   ```
 
 ## DateTime and DateTimeOffset
+  * a DateTime incorporates a three state flag indicating whether the DateTime is relative to the local time/UTC(Greenwich Mean Time)/Unspecified
+  * a DateTimeOffset is more specific, it stores the offset from UTC as a TimeSpan
 
-
-
+## Formatting and Parsing
+  * Formatting means converting to a string, parsing means converting from a string
+  * ToString, Parse
+  * Format Provider
+  ```
+  int minusTwo = int.Parse("(2)", NumberStyles.Integer | NumberStyles.AllowParenthess);
+  ```
+  * XmlCovert
+  * Type converters
+  * IFormatProvider, ICustomFormatter
+  ```
+  public class WordyFormatProvider: IFormatProvider, ICustomFormatter
+  {
+    static readonly string []_numberWords = "zero one two three four five six seven eight nine minus point".Split();
+    
+    IFormatProvider _parent;
+    
+    public WordyFormatProvider(): this(CultureInfo.CurrentCulcure)
+    {
+    }
+    
+    public WordyFormatProvider(IFormatProvider parent)
+    {
+      _parent = parent;
+    }
+    
+    public object GetFormat(Type formatType)
+    {
+      if (formatType == typeof(ICustomFormatter))
+      {
+        return this;
+      }
+      else
+      {
+        return null;
+      }
+    }
+    
+    public string Format(string format, object arg, IFormatProvider prov)
+    {
+      if (arg == null || format != "W")
+      {
+        return string.Format(_parent, "{0:" + format + "}", arg);
+      }
+      else
+      {
+        StringBuilder result = new StringBuilder();
+        string digilist = string.Format(CultureInfo.InvariantCulture, "{0}", arg);
+        foreach (char digit in digilist)
+        {
+          int i = "0123456789-.".Indexof(digit);
+          if (-1 == i)
+          {
+            continue;
+          }
+          if (result.Length > 0)
+          {
+            result.Append(' ');
+          }
+          result.Append(_numberWords[i]);
+        }
+        
+        return result.ToString();
+      }
+    }
+  }
+  ```
+  
+## Formatting
+  * ![Standard Numeric Format Strings Specifier](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Standard_Numeric_Format_Strings_Specifier.png)
+  * ![Standard Numeric Format Strings Letter](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Standard_Numeric_Format_Strings_Letter.png)
 
 
 

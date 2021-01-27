@@ -130,8 +130,41 @@
   * ![Standard Numeric Format Strings Specifier](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Standard_Numeric_Format_Strings_Specifier.png)
   * ![Standard Numeric Format Strings Letter](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Standard_Numeric_Format_Strings_Letter.png)
 
+## Globalization
+  * there are two aspects to internationalizing an application and localization
+  * Globalization is concerned with thress tasks
+    * making sure that your program doesn't break when run in another culture
+    * respecting a local culture's formatting rules, for instance, when displaying dates
+    * designing your program so that it picks up culture specific data and strings from satelite assemblies that you can later write and deploy
+  * Localization means concluding that last task by writing satellite assemblies for specific cultures. This can be done after writing your program
+  * you can test against diffirent cultures by reassigning Thread's CurrentCulture property
+  ```
+  Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("tr-TR");
+  ```
 
-
+## Enum
+  * Enum conversions
+  ```
+  [Flags]public enum BorderSides {Left = 1, Right = 2, Top = 4, Bottom = 8}
+  
+  int i = (int)BorderSides.Top;     //i == 4
+  BorderSides side = (BorderSides)i;
+  
+  static object GetBoxedIntegralValue(Enum anyEnum)
+  {
+    Type integralType = Enum.GetUnderlyingType(anyEnum.GetType());
+    return Convert.ChangeType(anyEnum, integralType);
+  }
+  
+  static string GetIntegralValueAsString(Enum anyEnum)
+  {
+    return anyEnum.ToString("D");
+  }
+  ```
+  
+## Working with Numbers
+  * ![number conversions](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Number_Conversions.png)
+  * ![math functions](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Math_Functions.png)
 
 
 

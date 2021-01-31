@@ -166,8 +166,109 @@
   * ![number conversions](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Number_Conversions.png)
   * ![math functions](https://github.com/haskellcg/Blog_Pictures/blob/master/C%23_Math_Functions.png)
 
+## == and !=
+  * when you use == or !=, C# makes a compile-time decision as to which type will perform the comparison, and no virtual behavior comes into play, this normally desirable
+  ```
+  int x = 5;
+  int y = 5;
+  Console.Write(x == y);  // true
+  
+  object x= 5;
+  object y = 5;
+  Console.Write(x == y);  // false
+  ```
 
+## The virtual Object.Equals method
+  * Equals is resolved at runtime -- according to the object's actual type, in this case, it calls Int32's Equals method, which applies value equality to the operands, return true
+  ```
+  object x = 5;
+  object y = 5;
+  Console.Write(x.Equals(y));  // true
+  ```
 
+## The static object.Euqals method
+  * a useful application is when writing generic types, operands are prohibited here because the compiler cannot bind to the static method of an unknown type
+  ```
+  class Test<T>
+  {
+    T _value;
+    public void SetValue(T newValue)
+    {
+      if (!object.Equals(newValue, _value))
+      {
+        _value = newValue;
+        OnValueChanged();
+      }
+    }
+    
+    proteced virtual void OnValueChanged();
+  }
+  ```
+  
+## The static object.ReferenceEquals method
+  * force referential equality comparison
+  ```
+  class Widget {...}
+  
+  class Test
+  {
+    static void Main()
+    {
+      Widget w1 = new Wighet();
+      Widget w2 = new Wighet();
+      Console.WriteLine(object.ReferenceEquals(w1, w2));
+    }
+  }
+  ```
+  
+## The IEquatable<T> interface
+  *  A consequence of calling object.Equals is that it force boxing on value types. A solution was introduced in C# 2.0, with the IEquatable<T> interface, **the idea is that IEquatable, when implemented, gives the same result as calling object's virtual Equals, but more quickly**
+ ```
+ class Test<T> where T: IEquatable<T>
+ {
+   public bool IsEqual(T a, T b)
+   {
+     return a.Equals(b);
+   }
+ }
+ ```
+ 
+## When Equals and == are not equal
+  * == operator enforces that one NaN can never equal anything else, even another NaN, its more natural
+  * the Equals method, however, is obliged to apply reflexive, and Collections and Dictionaries rely on Equals behaving this way
+  ```
+  double x = double.NaN;
+  Console.WriteLine(x == x);        // False
+  Console.WriteLine(x.Equals(x));   // True
+  ```
+  
+## Equality and Custom Types
+  * How to override equality semantics
+    * Override GetHashCode() and Equals()    
+    * (Optionally) overload != and ==
+    * (Optionally) implement IEquatable<T>
+  * GetHashCode is a virtual method in Object that fits this description -- it exists primarily for the benefits of just the following two types
+    * System.Collections.Hashtable
+    * System.Collections.Generic.Dictionary<TKey, TValue>
+  * both reference and value types have default implementations of GetHashCode
+  * For maximum performance in hashtables, GetHashCode should be written so as to minimize the likelihood of two different values returning the same hashcode
+  
+## Overriding Equals
+  * an object cannot equal null
+  * Equality is reflexive
+  * Equality is commutative
+  * Equality is transitive
+  * Equality operations are repeatable and reliable
+  
+## Overloading == and !=
+
+## Implementing IEquatable<T>
+  
+## Order Comparison
+  
+  
+  
+  
   
   
   

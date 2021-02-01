@@ -265,7 +265,15 @@
 ## Implementing IEquatable<T>
   
 ## Order Comparison
-  
+  * The IComparable interface (IComparable and IComparable<T>)
+  * the > and < operator (mostly for numeric types)
+  * IComparable
+  ```
+  public interface IComparable            {int CompareTo(object other);}
+  public interface IComparable<T>         {int CompareTo(T other);}
+  ```
+  * IComparable versus Equal: when Equals returns false, CompareTo can return what it likes  
+  * the pluggable ordering protocol, ICompare, which allows you to specify an alternative ordering algorithm when sorting or instantiating a sorted collection
   
   
   

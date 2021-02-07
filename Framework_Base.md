@@ -274,6 +274,37 @@
   ```
   * IComparable versus Equal: when Equals returns false, CompareTo can return what it likes  
   * the pluggable ordering protocol, ICompare, which allows you to specify an alternative ordering algorithm when sorting or instantiating a sorted collection
+
+## Utility Classes
+  * static Console class handles standard input/output for console-based application, you can constrol the window's position and dimesions with the properties WindowLeft, WindowTop, WindowHeight, WindowWidth. you can also change the BackgroundColor, ForegroundColor properties and manipulate the cursor with the CursorLeft, CursorTop and CursorSize
+  ```
+  Console.WindowWith = Console.LargestWindowWidth;
+  Console.ForegroundColor = ConsoleColor.Green;
+  Console.Write("test...50%");
+  Console.CursorLeft = 3;
+  Console.Write("90%");
+  ```
+  * redirect the Console's input and outputstream via SetIn and SetOut
+  ```
+  System.IO.TextWriter oldOut = Console.Out;
+  using (System.IO.TextWriter w = System.IO.File.CreatText("D:\\output.txt"))
+  {
+    Console.SetOut(w);
+    Console.WriteLine("Hello World");
+  }
+  
+  Console.SetOut(oldOut);
+  
+  System.Diagnostics.Process.Start("D:\\output.txt");
+  ```
+  * Process class in System.Diagnosrics allows you to launch a new process
+  ```
+  Process.Start("notepad.exe");
+  Process.Start("notepad.exe", "D:\\file.txt");  
+  ```
+  * The most flexible overload accepts a ProcessStartInfo instance
+  ```
+  ```
   
   
   

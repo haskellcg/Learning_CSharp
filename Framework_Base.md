@@ -304,14 +304,29 @@
   ```
   * The most flexible overload accepts a ProcessStartInfo instance
   ```
+  ProcessStartInfo psi = new ProcessStartInfo
+  {
+    FileName = "cmd.exe",
+    Arguments = "/c ipconfig /all",
+    RedirectStandardOutput = true,
+    UseShellExecute = false
+  };
+  Process p = Process.Start(psi);
+  string result = p.StandardOutput.ReadToEnd();
+  Console.WriteLine(result);
+  
+  // invoke the csc compiler if you set FileName to the following:
+  psi.FileName = System.IO.Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(),
+                   "csc.exe");
   ```
+  * the System.AppContext class is new to Framework 4.6, it provides a global string-keyed directory of Boolean values and is intended to offer library writers a standard mechanism for allowing consumers to switch new features on or off.
+  ```
+  // enable feature
+  AppContext.SetSwitch("MyLibrary.SomeBreakingChange", true);
   
-  
-  
-  
-  
-  
-  
-  
-  
+  // library checking feature
+  bool isDefined;      // chcek if the switch is undefined
+  bool switchValue;    // switch value
+  isDefined = AppContext.TryGetSwitch("MyLibrary.SomeBreakingChange", out switchValue);
+  ```
   

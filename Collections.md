@@ -137,8 +137,21 @@
   }
   ```
   * Clear: clear content instead of affect size, ICollection's Clear is reduced to zero
-  * Length and Rank
+  * Length and Rank: GetRank returns of dimensions in array  
+  * Sort
+  ```
+  //base on the first array to sort second array
+  int []numbers = {3, 2, 1};
+  string []words = {"three", "two", "one"};
+  Array.Sort(numbers, words);
+  ```
+  * Converting and Resizing: resize method works by creating a new array and copying over the elements
+  ```
+  public delegate TOutput Convert<TInput, TOutput>(TInput input);
   
+  float []reals = {1.3f, 1.5f, 1.8f};
+  int []wholes = Array.ConvertAll(reals, r => Convert.ToInt32(r));
+  ```
 
 
 

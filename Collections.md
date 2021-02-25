@@ -152,6 +152,38 @@
   float []reals = {1.3f, 1.5f, 1.8f};
   int []wholes = Array.ConvertAll(reals, r => Convert.ToInt32(r));
   ```
+  
+## LinkedList<T>: generic doubly linked list
+  
+## Queue<T> and Queue: FIFO data structure
+  
+## Stack<T> and Stack: LIFO data structure
+  
+## BitArray: dynamiclly sized collection of compacted bool values, it is memory-efficient that it uses only one bit for each value
+
+## HashSet<T> and SortedSet<T>
+  * SortedSet<T> keeps elements in order whereas hashSet<T> does not
+  * HashSet<T> is implemented with hashtable
+  * SortedSet<T> is implemented with red black tree
+
+## Dictionaries: key/value pair
+  * Dictionary<TKey, TValue>: it use a hashtable data structure to store key and value
+
+## OrderedDictionary: maintain elements in the same order that they were added, an OrderedDictionary is not a sorted dictionary
+
+## ListDictionary and HybridDictionary
+  * ListDictionary: efficient with very small lists, uses a singly linked list to store the underlying data
+  * HybridDictionary: is a ListDictionary that automatically converts to a HashTable upon reaching a certain size
+
+## Sorted Dictionaries
+  * SortedDictionary<TKey, TValue>, use red black tree
+  * SortedList<TKey, TValue>: ordered array pair
+
+## Customizable Collections and Proxies
+  * to fire event when an item is added or removed
+  * to update properties because of the added or removed item
+  * to detect an "illegal" add/remove operation and throw an exception
+  * .NET framework provides collection classes for above purpose, in **System.Collections.ObjectModel**
 
 
 

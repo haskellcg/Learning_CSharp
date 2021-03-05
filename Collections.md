@@ -185,25 +185,29 @@
   * to detect an "illegal" add/remove operation and throw an exception
   * .NET framework provides collection classes for above purpose, in **System.Collections.ObjectModel**
 
+## CollectionBase
+  * CollectionBase is the nongeneric version of Collection<T> introduced in Framework 1.0
 
+## KeyedCollection<TKey, TItem> and DictionaryBase
+  * KeyedCollection<TKey, TItem> subclasses CollectionBase, it both addds and subtracts functionality, what is adds is the ability to access items by key, much like with a dictionary
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## ReadOnlyCoolection<T>
+  * ReadOnlyCoolection<T> is a wrapper, or proxy, that provides a read-only views of a collection, that is useful in allowing a class to publicly expose read-only access to a collection that class can still update internally
+  ```
+  public class Test
+  {
+    List<string> names;
+    public ReadOnlyCollection<string> Names { get; private set;}
+  
+    public Test()
+    {
+      names = new List<string>();
+      Names = new ReadOnlyCollection<string>(names);
+    }
+    
+    public void AddInternally()
+    {
+      names.Add("test");
+    }
+  }
+  ```

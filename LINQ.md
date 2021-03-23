@@ -241,7 +241,37 @@
   * EF was written by the ADO.NET team and was released later as part of Service Pack 1
 
 ### L2S Classes
-  * 
+  * L2S allow you to use any class to represent data, as long as you decrorated it with approriate attribute
+  ```
+  // Table attribute, in the System.Data.Linq.Mapping, tell L2S that an object of this type represents a row in a database
+  [Table (Name = "Customers")]
+  public class Customer
+  {
+    [Column (IsPrimaryKey = true)]
+    public int ID;
+    
+    [Column (Name = "FullName")]
+    public string Name;
+  }
+  ```
+  
+### Entity Framework Entity Classes
+  * EF lets you use any class to repsent data
+  ```
+  // System.Data.Entity.dll
+  [EdmEntityType (NamespaceName = "NutshellModel", Name = "Customer")]
+  public particial class Customer
+  {
+    [EdmScalarPropertyAttribute (EntityKeyProperty = true, IsNullable = false)]
+    public int ID {get; set;}
+    
+    [EdmScalarProperty (EntityKeyProperty = false, IsNullable = false)]
+    public string Name {get; set;}
+  }
+  ```
+  * unlike with L2S, a class such as this is not enough on its own. You are not querying the database directly -- you are querying a higher-level model called the Entity Data Model (EDM)
+  * EDM file: the concept model (describe the EDM in isolation of the database); the store model (describe the database schema); the mapping (describe how the conceptual model maps to the store)
+  * Cons: map serveral table into one entity; map one table to several entities
   
   
   

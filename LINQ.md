@@ -273,9 +273,47 @@
   * EDM file: the concept model (describe the EDM in isolation of the database); the store model (describe the database schema); the mapping (describe how the conceptual model maps to the store)
   * Cons: map serveral table into one entity; map one table to several entities
   
+### DataContext and ObjectCOntext
+  * once you defined entity classes, you can start querying. The first start is to instantiate a DataContext(L2S) or ObjectContext(EF)
+  ```
+  var l2sConext = new DataContext("database connection string");
+  Table<Customer> customers = l2sConext.GetTable<Customer>();
+  Customer cust = customers.Single(c => c.ID == 2);
   
+  var efConext = new ObjectConext("entity connection string");
+  efContext.DefaultContainerName = "NutShellEntities";
+  ObjectSet<Customer> customers = efContext.CreateObjectSet<Customer>();
+  Customer cust = customers.Single(c => c.ID == 2);
+  ``` 
+  * they do two things. First, they acts as factory for generating objects; second, they keeps track of any changes
+  ```
+  Customer cust = customers.OrderBy(c => c.Name).First();
+  cust.Name = "Updated Name";
+  l2sConext.SubmitChanges();
+  ```
+  * instead of calling GetTable<Customer> and CreateObjectSet<Customer>, better approach is to subclass DataConext and ObjectConext, this is called **typed conext**
+  ```
+  class NutShellConext: DataConext
+  {
+    public Table<Customer> customers = GetTable<Customer>();
+  }
+  ```
+  * If you want to explicit dispose context, you must pass a DataConext or ObjectContext instant into methods such as GetCUstomers to avoid the problem described
+
+### Object Tracking
+  * a DataContext and ObjectContext instance keep track of all entities it instantiate.
+  * a context in its lifetime will never emit two separate entities that refer to same row in a table
+  * you can disable this behavior in L2S by setting ObjectTrackingEnabled to false; or in EF, you can disable change tracking on a per-type basis
+  ```
+  context.Customers.MergeOption = MergeOption.NoTracking;
+  ```
+  * To get fresh information from the database, you must either instantiate a new context or call its Refresh method, passing in the entity or entities that you want refreshed
   
-  
+### Associations
+
+### Deferred Execution with L2S and EF
+
+## DataLoadOptions
   
   
   

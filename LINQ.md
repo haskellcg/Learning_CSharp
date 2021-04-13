@@ -310,10 +310,55 @@
   * To get fresh information from the database, you must either instantiate a new context or call its Refresh method, passing in the entity or entities that you want refreshed
   
 ### Associations
+  * the entity generation tools perform another useful job. For each relationship defined in your database, then generate properties on each side that allow you to query that relationship.
+  ```
+  create table Customer
+  {
+    ID int not null primary key,
+    Name varchar(30) not null
+  }
+  create table Purchase
+  {
+    ID int not null primary key,
+    CustomerID int reference Customer (ID),
+    Description varchar(30) not null,
+    Price decimal not null
+  }
+  
+  var context = new NutshellContext("connection string");
+  Customer customer1 = context.Customers.OrderBy(c => c.Name).First();
+  foreach (Purchase p in customer1.Purchases)
+  {
+    Console.WriteLine(p.Price);
+  }
+  ```
 
 ### Deferred Execution with L2S and EF
+  * L2S and EF queries are subject to deferred execution, just like local queries. This allow you to build queries progressively.
+  * L2S and EF have special deferred execution semantics, and that is when a subquery appears inside a select expression
+  * With local queries, you get double deferred execution, because from a functional perspective, you're selecting a sequence a queries. So, if you enumerate the outer result sequence, but never enumerate the inner sequences, the subquery will never execute
+  * With L2S/EF, the subquery is execute at the same time as the main outer query. This avoid excessive round-tripping
 
 ## DataLoadOptions
+  * the second use for a DataLocaOptions is to request that certain EntitySets be eagerly loaded with their parent.
+  ```
+  // load all customers and their purchases in a single SQL round trip
+  DataLoadOptions options = new DataLoadOptions();
+  options.LoadWith<Customer>(c => c.Purchases);
+  context.LodaOptions = options;
+  
+  foreach (Customer c in context.Customers)
+  {
+    foreach (Purchase p in c.Purchases)
+    {
+      Console.WriteLine(c.Name + " bought a " + p.Description);
+    }
+  }
+  
+  // combine LoadWith with AssociateWith, high-value purchases should be retrived in the same round trip
+  options.LoadWith<Customer>(c => c.Purchases);
+  options.AssociateWith<Customer>(c => c.Purchases.Where(p => p.Price > 1000))
+  ```
   
   
   

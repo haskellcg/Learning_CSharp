@@ -1,4 +1,8 @@
 # Learning_CSharp
+
+# Reference
+  * C# 7.0 in a Nutshell
+
 ## Basic
   * string is a reference type. Its equal operator, however, follow value-type semantics
   ```

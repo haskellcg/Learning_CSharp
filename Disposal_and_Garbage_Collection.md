@@ -83,7 +83,22 @@
 ## How the Garbage Collector Works
   * the standared CLR use a generational mark-and-compact GC that performs automatic memory management for objects stored on the managed heap. The GC is considered to be tracing garbage collector in that it doesn't interfere with every access to an object, but rather wakes up immediately and traces the graph of objects stored on the managed heap to determine which objects can be considerd garbage and therefore collected
   * the GC initiates a garbage collection upon performing a memory allocation either after a certain threshold of memory has been allocated, or at other times to reduce the application's memory foorprint. This process can also be initiated manually by calling **System.GC.Collect**. During the garbage collection, all threads may be frozen.
-  * 
+  * the GC begins with its root object references and walks the object graph, marking all the objects it touches as reachable. Once this process is complete, all objects that not been marked are considered unused and are subjet to garbage collection
+  * unused object without finalizers are immediately discarded
+  * the remainning "live" objects are then shifted to the start of the heap, freeing space for more objects. This compaction serves two purposes: it avoids memory fragmentation, and it allows the GC to employ a very simple strategy when allocating new objects, which is to always allocate memory at the end of heap 
+  * if there is insufficient space to allocate memory for a new object after garbage collection, and the operating system is unusable to grant further memory, an **OutOfMemoryException** is thrown.
+
+## Generational collection
+  * the most important optimation is that the GC is generational.
+  * basically, the GC divides the managed heap into three generations. Objects that have just been allocated are in **Gen0**, and objects that have been survived one collection cycle are in **Gen1**, all other objects are in **Gen2**. Gen1 and Gen0 are known as ephemeral generations
+
+## The Large Object Heap
+  * the GC uses a separate heap called the Large Object Heap (LOH) for objects larger than threshold (currently 85,000 bytes), this avoids excessive Gen0 collections, without the LOH, allocating a serise of 16 MB objects might trigger a Gen0 collection after every collection
+  * By default, the LOH is not subject to compaction, because moving large blocks of memory during garbage collection would be prohibitively expensive.
+  ```
+  // you can instruct the GC to compact the LOH in the next collection
+  GCSetting.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactMode;
+  ```
 
 
 

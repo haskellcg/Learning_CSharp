@@ -2,6 +2,7 @@
 
 # Reference
   * C# 7.0 in a Nutshell
+  * [yield keyword](https://www.c-sharpcorner.com/UploadFile/5ef30d/understanding-yield-return-in-C-Sharp/)
 
 ## Basic
   * string is a reference type. Its equal operator, however, follow value-type semantics
